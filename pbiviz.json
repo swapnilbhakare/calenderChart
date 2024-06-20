@@ -1,0 +1,25 @@
+{
+    "visual": {
+        "name": "calenderChart",
+        "displayName": "calenderChart",
+        "guid": "calenderChart289C233E4AB44945973215C95CB5363E",
+        "visualClassName": "Visual",
+        "version": "1.0.0",
+        "description": "dd",
+        "supportUrl": "dd",
+        "gitHubUrl": "dd"
+    },
+    "apiVersion": "5.1.0",
+    "author": {
+        "name": "dd",
+        "email": "dd"
+    },
+    "assets": {
+        "icon": "assets/icon.png"
+    },
+    "externalJS": null,
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": []
+}

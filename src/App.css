@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100%; /* Ensure the container takes up the full height */
+}
+
+  
+  .dropdowns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .dropdown-container-group {
+    margin-right: 10px; /* Adjust as needed */
+  }
+  
