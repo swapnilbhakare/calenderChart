@@ -8,6 +8,7 @@ import { VisualFormattingSettingsModel } from "./settings";
 import CalendarChart from "./Components/CalenderChart";
 import WeeksInYearChart from "./Components/WeeksInYearChart";
 import LicenseKeyValidator from "./Components/LicenseKeyValidator";
+
 interface DataPoint {
   category: string;
   goal: number;
@@ -39,6 +40,7 @@ const App: React.FC<AppProps> = ({
   const [selectedGoalKey, setSelectedGoalKey] = useState<string>("");
   const [selectedValuesKey, setSelectedValuesKey] = useState<string>("");
   const [selectedQuarter, setSelectedQuarter] = useState<string>("All");
+  const [selectedTopN, setSelectedTopN] = useState<number>(0);
   const [isLicenseValid, setIsLicenseValid] = useState<boolean>(false);
 
   const transformData = (
@@ -119,6 +121,13 @@ const App: React.FC<AppProps> = ({
     });
   };
 
+  const filterDataByTopN = (data: DataPoint[], topN: number): DataPoint[] => {
+    if (topN <= 0) {
+      return data;
+    }
+    return data.sort((a, b) => b.values - a.values).slice(0, topN);
+  };
+
   useEffect(() => {
     if (dataView) {
       const transformedData: DataPoint[] = transformData(
@@ -132,12 +141,14 @@ const App: React.FC<AppProps> = ({
   }, [dataView, selectedCategoryKey, selectedGoalKey, selectedValuesKey]);
 
   useEffect(() => {
-    setData(filterDataByQuarter(fullData, selectedQuarter));
-  }, [selectedQuarter, fullData]);
+    let filteredData = filterDataByQuarter(fullData, selectedQuarter);
+    filteredData = filterDataByTopN(filteredData, selectedTopN);
+    setData(filteredData);
+  }, [selectedQuarter, selectedTopN, fullData]);
 
   const handleDropdownChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (value: string) => {
+    (setter: React.Dispatch<React.SetStateAction<string | number>>) =>
+    (value: string | number) => {
       setter(value);
     };
 
@@ -187,7 +198,6 @@ const App: React.FC<AppProps> = ({
                   onChange={handleDropdownChange(setSelectedValuesKey)}
                 />
               )}
-
               {formattingSettings.calendarChartSettings.showQuarter.value && (
                 <Dropdown
                   label="Quarter"
@@ -202,6 +212,19 @@ const App: React.FC<AppProps> = ({
                   onChange={handleDropdownChange(setSelectedQuarter)}
                 />
               )}
+              {formattingSettings.calendarChartSettings.showTopN.value && (
+                <Dropdown
+                  label="Top N"
+                  options={[
+                    { key: "0", value: 0, text: "All" },
+                    { key: "3", value: 3, text: "Top 3" },
+                    { key: "5", value: 5, text: "Top 5" },
+                    { key: "10", value: 10, text: "Top 10" },
+                  ]}
+                  selectedValue={selectedTopN}
+                  onChange={handleDropdownChange(setSelectedTopN)}
+                />
+              )}
             </>
           )}
         </div>
@@ -211,7 +234,6 @@ const App: React.FC<AppProps> = ({
         selectedQuarter={selectedQuarter}
         options={options}
       />
-
       <CalendarChart
         options={options}
         target={target}

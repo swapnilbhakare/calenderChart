@@ -138,7 +138,7 @@ const CalendarChart: React.FC<CalendarChartProps> = ({
           }
           tooltipServiceWrapperRef.current?.addTooltip(
             d3.select(this),
-            (tooltipEvent: TooltipEventArgs<DataPoint>) => [
+            (tooltipEvent) => [
               { displayName: "Date", value: dayData.category },
               { displayName: "Value", value: dayData.values.toString() },
               { displayName: "Goal", value: dayData.goal.toString() },

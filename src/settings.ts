@@ -60,9 +60,14 @@ class CalendarChartSettings extends FormattingSettingsCard {
         displayName: "Show Quarter",
         value: true
     });
+    showTopN = new formattingSettings.ToggleSwitch({
+        name: "showTopN",
+        displayName: "Show Top N",
+        value: true
+    });
     name: string = "calendarChartSettings";
     displayName: string = "Calendar Chart Settings";
-    slices: Array<FormattingSettingsSlice> = [this.showCategory, this.showGoal, this.showValues, this.showQuarter];
+    slices: Array<FormattingSettingsSlice> = [this.showCategory, this.showGoal, this.showValues, this.showQuarter, this.showTopN];
 
 
 }

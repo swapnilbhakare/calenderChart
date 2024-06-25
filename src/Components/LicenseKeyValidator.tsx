@@ -6,19 +6,21 @@ interface LicenseKeyProps {
   onValidate: (isValid: boolean) => void;
 }
 
-const LicenseKeyValidator: React.FC<LicenseKeyProps> = ({ licenseKey, onValidate }) => {
-    const validLicenses = [
-        "545654524b56504b", // 1 Day License Key
-        "545654524b56504b", // 7 Days License Key
-        "545654524b56504b", // 15 Days License Key
-        "545654524b56514b", // 30 Days License Key
-        "545654524b57544b", // 6 Months License Key
-        "545654524b565f4b", // 3 Months License Key
-        "545654534b56504b", // 1 Year License Key
-        "545654534b57544b", // 1.5 Years License Key
-        "545654504b56504b"  // 2 Years License Key
-      ];
-      
+const LicenseKeyValidator: React.FC<LicenseKeyProps> = ({
+  licenseKey,
+  onValidate,
+}) => {
+  const validLicenses = [
+    "545654524b56504b", // 1 Day License Key
+    "545654524b56504b", // 7 Days License Key
+    "545654524b56504b", // 15 Days License Key
+    "545654524b56514b", // 30 Days License Key
+    "545654524b57544b", // 6 Months License Key
+    "545654524b565f4b", // 3 Months License Key
+    "545654534b56504b", // 1 Year License Key
+    "545654534b57544b", // 1.5 Years License Key
+    "545654504b56504b", // 2 Years License Key
+  ];
 
   let isLicenseValid = false;
 
@@ -29,7 +31,8 @@ const LicenseKeyValidator: React.FC<LicenseKeyProps> = ({ licenseKey, onValidate
       const encryptionKey = "abracadabra";
 
       const decipher = (salt: string) => {
-        const textToChars = (text: string) => text.split("").map((c: string) => c.charCodeAt(0));
+        const textToChars = (text: string) =>
+          text.split("").map((c: string) => c.charCodeAt(0));
         const applySaltToChar = (code: any) =>
           textToChars(salt).reduce((a: number, b: number) => a ^ b, code);
         return (encoded: string | null) => {
@@ -39,10 +42,10 @@ const LicenseKeyValidator: React.FC<LicenseKeyProps> = ({ licenseKey, onValidate
           return (
             encoded
               .match(/.{1,2}/g)
-              ?.map((hex: string) => parseInt(hex, 16))
-              ?.map(applySaltToChar)
-              ?.map((charCode: number) => String.fromCharCode(charCode))
-              ?.join("") ?? ""
+              .map((hex: string) => parseInt(hex, 16))
+              .map(applySaltToChar)
+              .map((charCode: number) => String.fromCharCode(charCode))
+              .join("") ?? ""
           );
         };
       };
@@ -60,35 +63,40 @@ const LicenseKeyValidator: React.FC<LicenseKeyProps> = ({ licenseKey, onValidate
     onValidate(isLicenseValid);
   }, [isLicenseValid, onValidate]);
 
-  return isLicenseValid ? null : <img src={logo} alt="Logo" style={{ width: "70px" }} />;
+  return isLicenseValid ? null : (
+    <img src={logo} alt="Logo" style={{ width: "70px" }} />
+  );
 };
-
-
 
 export default LicenseKeyValidator;
 const generateLicenseKey = (days: number, encryptionKey: string): string => {
-    const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + days);
-    const dateString = futureDate.toISOString();
-  
-    const cipher = (salt: string) => {
-      const textToChars = (text: string) => text.split("").map((c: string) => c.charCodeAt(0));
-      const applySaltToChar = (code: any) =>
-        textToChars(salt).reduce((a: number, b: number) => a ^ b, code);
-      return (text: string) => 
-        text.split("")
-            .map((c: string) => c.charCodeAt(0))
-            .map(applySaltToChar)
-            .map((charCode: number) => charCode.toString(16).padStart(2, '0'))
-            .join("");
-    };
-  
-    const myCipher: any = cipher(encryptionKey);
-    const generatedKey = myCipher(dateString);
+  const futureDate = new Date();
+  futureDate.setDate(futureDate.getDate() + days);
+  const dateString = futureDate.toISOString();
 
-    // Truncate the key to fit within 12-16 characters
-    const truncatedKey = generatedKey.substring(0, Math.min(generatedKey.length, 16));
-    return truncatedKey;
+  const cipher = (salt: string) => {
+    const textToChars = (text: string) =>
+      text.split("").map((c: string) => c.charCodeAt(0));
+    const applySaltToChar = (code: any) =>
+      textToChars(salt).reduce((a: number, b: number) => a ^ b, code);
+    return (text: string) =>
+      text
+        .split("")
+        .map((c: string) => c.charCodeAt(0))
+        .map(applySaltToChar)
+        .map((charCode: number) => charCode.toString(16).padStart(2, "0"))
+        .join("");
+  };
+
+  const myCipher: any = cipher(encryptionKey);
+  const generatedKey = myCipher(dateString);
+
+  // Truncate the key to fit within 12-16 characters
+  const truncatedKey = generatedKey.substring(
+    0,
+    Math.min(generatedKey.length, 16)
+  );
+  return truncatedKey;
 };
 
 // Usage example
